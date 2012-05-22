@@ -1,9 +1,10 @@
 {- This is a Haskell version of Samuel A. Falvos weave.fs -}
 module Weave (
-    processWords
+    processFile
 ) where
 
 import Data.List (isPrefixOf)
+
 
 italicWord :: String -> String
 italicWord word = "<i>" ++ word ++ "</i>"
@@ -26,3 +27,11 @@ processWords (token:[]) = [token]
 processWords (token:nextToken:rest)
     | "~" `isPrefixOf` token = (processToken token nextToken) : processWords rest
     | otherwise              = token : (processWords $ nextToken : rest)
+
+
+processFile :: String -> String -> IO ()
+processFile inFile outFile = do
+        input <- readFile inFile
+        let contents = words input
+        writeFile outFile  $ unwords (processWords contents)
+
