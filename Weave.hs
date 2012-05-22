@@ -5,6 +5,8 @@ module Weave (
 
 import Data.List (isPrefixOf)
 
+--let s = "This is a test string"
+--let ws = words s
 {- Todo: Actually process token 
 case fixedToken of
     "iw" -> italicWord nextToken
@@ -15,9 +17,7 @@ processToken :: String -> String -> String
 processToken token nextToken = nextToken
 
 processWords :: [String] -> [String]
-processWords [] = []
-processWords ws
-    | "~" `isPrefixOf` token        = processToken token nextToken : []
-    | otherwise                     = (processWords $ drop 1 ws)  ++ []
-    where token = head ws
-          nextToken = ws !! 1
+processWords []     = []
+processWords (token:nextToken:rest)
+    | "~" `isPrefixOf` token        = processToken token nextToken : processWords rest
+    | otherwise                     = [token] ++ (processWords $ [nextToken] ++ rest) ++ []
